@@ -26,12 +26,10 @@ jobs:
 
   terraform_apply_all_rds:
     needs: list_modules
-    runs-on: ubuntu-latest
     environment: production # It's good practice to use environments for CD
     strategy:
       matrix:
         tf_module: ${{ fromJson(needs.list_modules.outputs.tf_modules) }}
-    name: Apply ${{ matrix.tf_module }}
     uses: ./.github/workflows/reusable-rds-apply.yml
     with:
       tf_path: ${{ matrix.tf_module }}

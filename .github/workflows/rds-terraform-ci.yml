@@ -26,11 +26,9 @@ jobs:
 
   terraform_plan_all_rds:
     needs: list_modules
-    runs-on: ubuntu-latest
     strategy:
       matrix:
         tf_module: ${{ fromJson(needs.list_modules.outputs.tf_modules) }}
-    name: Plan ${{ matrix.tf_module }}
     uses: ./.github/workflows/reusable-rds-plan.yml
     with:
       tf_path: ${{ matrix.tf_module }}
