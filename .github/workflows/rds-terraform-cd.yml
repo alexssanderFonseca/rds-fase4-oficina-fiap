@@ -26,7 +26,6 @@ jobs:
 
   terraform_apply_all_rds:
     needs: list_modules
-    continue-on-error: true
     strategy:
       matrix:
         tf_module: ${{ fromJson(needs.list_modules.outputs.tf_modules) }}
