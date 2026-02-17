@@ -39,5 +39,5 @@ output "connection_info" {
     
     ⚠️ IMPORTANTE: Sempre PARE ou EXCLUA o RDS ao final do uso!
   EOT
-  sensitive = true
+  sensitive   = true
 }
