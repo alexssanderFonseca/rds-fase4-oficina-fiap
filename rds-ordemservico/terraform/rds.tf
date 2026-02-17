@@ -12,7 +12,7 @@ resource "aws_secretsmanager_secret" "rds_password_secret" {
   name        = "rds-ordemservico/${aws_db_instance.academico_rds.identifier}/password"
   description = "RDS Ordemservico password for ${aws_db_instance.academico_rds.identifier}"
 
-  tags = {
+tags = {
     Name        = "rds-ordemservico-password"
     Environment = "ordemservico"
     ManagedBy   = "Terraform"

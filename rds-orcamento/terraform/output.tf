@@ -1,11 +1,3 @@
-data "aws_secretsmanager_secret" "rds_password_secret_data" {
-  name = aws_secretsmanager_secret.rds_password_secret.name
-}
-
-data "aws_secretsmanager_secret_version" "rds_password_secret_version_data" {
-  secret_id = data.aws_secretsmanager_secret.rds_password_secret_data.id
-}
-
 output "rds_endpoint" {
   description = "Endpoint de conexão do RDS Orcamento"
   value       = aws_db_instance.academico_rds.endpoint
@@ -35,7 +27,6 @@ output "connection_info" {
     
     1. Endpoint: ${aws_db_instance.academico_rds.endpoint}
     2. Username: ${aws_db_instance.academico_rds.username}
-    3. Password: ${data.aws_secretsmanager_secret_version.rds_password_secret_version_data.secret_string}
     
     ⚠️ IMPORTANTE: Sempre PARE ou EXCLUA o RDS ao final do uso!
   EOT
