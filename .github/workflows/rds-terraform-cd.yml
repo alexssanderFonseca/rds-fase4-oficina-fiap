@@ -32,15 +32,10 @@ jobs:
       matrix:
         tf_module: ${{ fromJson(needs.list_modules.outputs.tf_modules) }}
     name: Apply ${{ matrix.tf_module }}
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Call Reusable Terraform Apply
-        uses: ./.github/workflows/reusable-rds-apply.yml
-        with:
-          tf_path: ${{ matrix.tf_module }}
-        secrets:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
+    uses: ./.github/workflows/reusable-rds-apply.yml
+    with:
+      tf_path: ${{ matrix.tf_module }}
+    secrets:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
