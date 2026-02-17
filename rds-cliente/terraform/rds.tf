@@ -9,7 +9,7 @@ resource "random_password" "rds_password" {
 }
 
 resource "aws_secretsmanager_secret" "rds_password_secret" {
-  name        = "rds-cliente/${aws_db_instance.academico_rds.identifier}/password"
+  name        = "rds-cliente/${aws_db_instance.academico_rds.identifier}-new/password"
   description = "RDS Cliente password for ${aws_db_instance.academico_rds.identifier}"
 
   tags = {
