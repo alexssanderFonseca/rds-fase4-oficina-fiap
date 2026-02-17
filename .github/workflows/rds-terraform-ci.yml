@@ -1,0 +1,45 @@
+name: CI for all RDS Terraform modules
+
+on:
+  push:
+    branches:
+      - 'feature/*' # Only run on feature branches
+
+jobs:
+  list_modules:
+    runs-on: ubuntu-latest
+    outputs:
+      tf_modules: ${{ steps.find_modules.outputs.tf_modules }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Find Terraform modules
+        id: find_modules
+        run: |
+          TF_MODULES=$(find . -type d -path './rds-*/terraform' | sed 's|^\./||' | sort)
+          echo "Found Terraform modules: $TF_MODULES"
+          # Convert to JSON array suitable for matrix
+          JSON_ARRAY=$(echo "$TF_MODULES" | awk -v q='"' '{print q $0 q}' | paste -sd, -)
+          echo "tf_modules=[$JSON_ARRAY]" >> "$GITHUB_OUTPUT"
+        shell: bash
+
+  terraform_plan_all_rds:
+    needs: list_modules
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        tf_module: ${{ fromJson(needs.list_modules.outputs.tf_modules) }}
+    name: Plan ${{ matrix.tf_module }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Call Reusable Terraform Plan
+        uses: ./.github/workflows/reusable-rds-plan.yml
+        with:
+          tf_path: ${{ matrix.tf_module }}
+        secrets:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
