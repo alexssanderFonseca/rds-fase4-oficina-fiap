@@ -26,6 +26,7 @@ jobs:
 
   terraform_apply_all_rds:
     needs: list_modules
+    runs-on: ubuntu-latest
     environment: production # It's good practice to use environments for CD
     strategy:
       matrix:

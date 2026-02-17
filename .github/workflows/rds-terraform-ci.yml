@@ -26,6 +26,7 @@ jobs:
 
   terraform_plan_all_rds:
     needs: list_modules
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         tf_module: ${{ fromJson(needs.list_modules.outputs.tf_modules) }}
