@@ -8,6 +8,22 @@ resource "random_password" "rds_password" {
   override_special = "!#$%&*()-_=+[]{}<>:?"
 }
 
+resource "aws_secretsmanager_secret" "rds_password_secret" {
+  name        = "rds-catalogo/${aws_db_instance.academico_rds.identifier}/password"
+  description = "RDS Catalogo password for ${aws_db_instance.academico_rds.identifier}"
+
+  tags = {
+    Name        = "rds-catalogo-password"
+    Environment = "catalogo"
+    ManagedBy   = "Terraform"
+  }
+}
+
+resource "aws_secretsmanager_secret_version" "rds_password_secret_version" {
+  secret_id     = aws_secretsmanager_secret.rds_password_secret.id
+  secret_string = random_password.rds_password.result
+}
+
 resource "aws_db_subnet_group" "rds_subnet_group" {
   name       = "rds-catalogo-oficina-subnet-group"
   subnet_ids = local.private_subnets
